@@ -60,3 +60,77 @@ class BarChart extends Component {
 
 export default BarChart;
 ```
+
+## simpleBarchart setting
+- `npm install --save d3`
+- `npm install --save react-faux-dom`
+- 完了後`npm start`
+- BarChartを編集
+```js
+//npmした二つのライブラリをインポート
+import * as d3 from 'd3';
+import ReactFauxDOM from 'react-faux-dom';
+```
+
+```js
+import React, { Component } from 'react';
+import * as d3 from "d3";
+import ReactFauxDOM from 'react-faux-dom';
+
+class BarChart extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      data:props.data
+    }
+  }
+
+//デフォルトの状態を設定
+  static defaultProps = {
+    height:500,
+    width:500,
+    chartBg: '#f4f4f4',
+    barColor: 'steelBlue',
+    barWidth: 40,
+    barOffset: 5
+  }
+  render() {
+      const chart = ReactFauxDOM.createElement('div');
+
+      //barの形やスタイルを定義
+      d3.select(chart).append('svg')
+        .attr('width',this.props.width)
+        .attr('height',this.props.height)
+        .selectAll('rect')
+        .data(this.state.data)
+        .enter().append('rect')
+          .style('fill',this.props.barColor)
+          .attr('width', this.props.barWidth)
+          .attr('height', (d) => {
+            return d;
+          })
+          .attr('x', (d, i) => {
+            return i * (this.props.barWidth + this.props. barOffset)
+          })
+          .attr('y', (d) => {
+            return this.props.height - d;
+          })
+
+      return chart.toReact();
+    }
+
+}
+
+export default BarChart;
+//この状態で青色のバーが表示されていたら成功
+```
+- App.jsのコンストラクタで定義したdataを変更すると
+```
+constructor(props){
+  super(props);
+  this.state = {
+    //ここを減らすとChartの青色のバーも減る
+    data: [100, 400, 232, 200, 233, 120, 78]
+  }
+}
+```
