@@ -134,3 +134,70 @@ constructor(props){
   }
 }
 ```
+
+## X,Y スケールの追加
+- BarChartを編集
+```js
+constructor(props){
+  super(props);
+  this.state = {
+    data:props.data,
+    //追加
+    yScale: '',
+    xScale: ''
+  }
+}
+
+//関数を作成
+setYScalse() {
+  console.log('Setting Y Scalse...');
+  let y = d3.scaleLinear()
+    .domain([0, d3.max(this.state.data)])
+    .range([0, this.props.height]);
+
+    this.setState({
+      yScale: y
+    });
+}
+
+componentWillMount(){
+  this.setYScalse();
+}
+//xについてもsetYScalseをコピーして作成する
+
+setXScalse() {
+  console.log('Setting X Scalse...');
+  let x = d3.scaleBand()
+    .domain(d3.range(0, this.state.data.length))
+    .range([0, this.props.width]);
+
+    this.setState({
+      xScale: x
+    });
+}
+
+
+componentWillMount(){
+  this.setYScalse();
+  //setXScalseも呼び出し
+  this.setXScalse();
+}
+
+
+//この部分を修正
+.attr('height', (d) => {
+  // return d;
+  return this.state.yScale(d);
+})
+.attr('x', (d, i) => {
+  // return i * (this.props.barWidth + this.props. barOffset)
+  return this.state.xScale(i);
+})
+.attr('y', (d) => {
+  // return this.props.height - d;
+  return this.props.height - this.state.yScale(d);
+})
+
+
+```
+- これでX、Yのバーの高さのスケールが調整されている
