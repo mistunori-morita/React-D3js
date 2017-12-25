@@ -229,7 +229,7 @@ render() {
 
 return chart.toReact();
 
-//🔽書き換えるとこうなる
+//書き換えるとこうなる
 .on('mouseover', (d) => {
   tooltip.style('opacity', 1);
   tooltip.html(d)
