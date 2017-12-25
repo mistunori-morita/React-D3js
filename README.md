@@ -201,3 +201,46 @@ componentWillMount(){
 
 ```
 - これでX、Yのバーの高さのスケールが調整されている
+
+
+## hoverChartBar
+- BarChartに追記
+```js
+
+render() {
+    const chart = ReactFauxDOM.createElement('div');
+    //tooltipのスタイルをappendして追加
+    let tooltip = d3.select('body').append('div')
+      .style('position', 'absolute')
+      .style('background', '#ccc')
+      .style('opacity', '0')
+      .style('padding', '10px')
+      .style('border', '1px #000 solid')
+      .style('border-radius', '5px')
+```
+
+- eventの紐付け
+```js
+//hoverした時に変化をさせたいのでイベントの設定
+//こうしてイベントを設定するとコンソールログにオブジェクトの数字が出てくる
+.on('mouseover', (d) => {
+  console.log(d);
+})
+
+return chart.toReact();
+
+//🔽書き換えるとこうなる
+.on('mouseover', (d) => {
+  tooltip.style('opacity', 1);
+  tooltip.html(d)
+    .style('left', (d3.event.pageX) + 'px')
+    .style('top', (d3.event.pageY) + 'px')
+})
+
+//mouseoutした時の設定も続けて書いておくとベスト
+.on('mouseout', (d) => {
+  tooltip.style('opacity', 0);
+})
+
+
+```
